@@ -35,12 +35,14 @@ NAME=squeezelite-armv6hf
 DAEMON=/usr/bin/$NAME
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
-SBSHOST="-s 192.168.100.100 "
-#SLMAC="00:00:00:00:00:01"
+SBSHOST="-s 192.168.111.100 "
+SLMAC="-m b8:27:eb:b8:c7:e1 "
 #SLOPTIONS="-o front:CARD=DAC,DEV=0 -n RaspberryPi"
 #SLOPTIONS="-n Lounge -a 80 "
 SLOPTIONS="-o front:CARD=DAC,DEV=0 -n Lounge -a 80 "
-SLLOG=/var/log/squeezelite.log
+#SLLOG=/var/log/squeezelite.log
+SLLOG=/tmp/squeezelite.log
+SLOPTIONSLOG="-d slimproto=info -f /tmp/squeezelite.log "
 #OSS="`$DAEMON -V | grep -c 1810`"
 #AOSS=/usr/bin/aoss
 
@@ -50,7 +52,7 @@ SLLOG=/var/log/squeezelite.log
 # Read configuration variable file if it is present
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
-DAEMON_ARGS="${SLOPTIONS} ${SBSHOST}"
+DAEMON_ARGS="${SLOPTIONS} ${SLMAC} ${SBSHOST} ${SLOPTIONSLOG}"
 
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
@@ -76,8 +78,12 @@ do_start()
         rm ${SLLOG}
     fi
 
-        start-stop-daemon --start --quiet --make-pidfile --pidfile $PIDFILE --background --exec $DAEMON -- $DAEMON_ARGS || return 2
+    # Make the file for the degug output
+    mkfifo ${SLLOG}
 
+    start-stop-daemon --start --quiet --make-pidfile --pidfile $PIDFILE --background --exec $DAEMON -- $DAEMON_ARGS || return 2
+
+    nohup cat ${SLLOG} | /home/pi/squeezecontrol.sh &
 }
 
 #
