@@ -1,7 +1,7 @@
 #! /bin/sh
 ### BEGIN INIT INFO
 # Provides: squeezelite
-# Required-Start:
+# Required-Start: $network
 # Required-Stop:
 # Should-Start:
 # Default-Start: 2 3 4 5
@@ -31,13 +31,13 @@
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="Squeezebox client"
-NAME=squeezelite-armv6hf
+NAME=squeezelite
 DAEMON=/usr/bin/$NAME
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
-SBSHOST="-s 192.168.0.1 "
-#SLMAC="00:00:00:00:00:01"
-SLOPTIONS=" "
+SBSHOST="-s 192.168.111.100 "
+SLMAC="-m 00:c1:40:49:03:59 "
+SLOPTIONS="-n Kitchen -a 80 -S /usr/bin/squeezebox-power.sh "
 #SLLOG=/var/log/squeezelite.log
 #OSS="`$DAEMON -V | grep -c 1810`"
 #AOSS=/usr/bin/aoss
@@ -48,7 +48,7 @@ SLOPTIONS=" "
 # Read configuration variable file if it is present
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
-DAEMON_ARGS="${SLOPTIONS} ${SBSHOST} ${SLOPTIONSLOG}"
+DAEMON_ARGS="${SLOPTIONS} ${SLMAC} ${SBSHOST} ${SLOPTIONSLOG}"
 
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
