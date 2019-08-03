@@ -3,7 +3,7 @@
 # installed at /etc/default/squeezelite by the maintainer scripts
 
 # The name for the squeezelite player:
-SL_NAME="$(hostname -s)"
+SL_NAME="Outside"
 
 # ALSA output device:
 #SL_SOUNDCARD="default:CARD=Set"
@@ -12,8 +12,10 @@ SL_NAME="$(hostname -s)"
 # Uncomment the next line if you want to point squeezelite at the IP address of
 # your squeezebox server. This is usually unnecessary as the server is
 # automatically discovered.
-#SB_SERVER_IP="192.168.x.y"
+SB_SERVER_IP="192.168.111.100"
 
 # Additional options to pass to squeezelite:
 # Please do not include -z to make squeezelite daemonise itself.
-#SB_EXTRA_ARGS=""
+# Have needed this before
+#SB_EXTRA_ARGS="-a 80"
+SB_EXTRA_ARGS="-G 14:H"
